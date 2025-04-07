@@ -43,16 +43,17 @@ const start = async () => {
 
   // Connect to MongoDB database
   try {
-    const connectionDb = await mongoose.connect(process.env.MONGO_URI);
-    console.log(`✅ MongoDB connected: ${connectionDb.connection.host}`);
+    const connectionDb = await mongoose.connect(process.env.MONGODB_URI);
+    console.log(`MongoDB connected: ${connectionDb.connection.host}`);
 
     server.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
-  } catch (err) {
-    console.error("❌ Failed to connect to MongoDB", err);
+  } catch (err) { 
+    console.error("Failed to connect to MongoDB", err);
     process.exit(1); // Exit if DB connection fails
   }
 };
 
 start(); // Call the start function to initiate DB connection and start the server
+
