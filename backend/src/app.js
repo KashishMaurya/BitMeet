@@ -14,6 +14,8 @@ import { connectToSocket } from "./controllers/SocketManager.js"; // Custom func
 
 import cors from "cors"; // Enables CORS (Cross-Origin Resource Sharing)
 
+import userRoutes from "./routes/users.routes.js";
+
 // Create an Express app
 const app = express();
 
@@ -31,6 +33,8 @@ app.set("port", PORT);
 app.use(cors()); // Allow cross-origin requests (important for frontend-backend communication)
 app.use(express.json({ limit: "40kb" })); // Parse JSON bodies (limit set to 40kb)
 app.use(express.urlencoded({ limit: "40kb", extended: true })); // Parse URL-encoded bodies
+
+app.use("/api/v1/users", userRoutes);
 
 // Sample route
 app.get("/home", (req, res) => {

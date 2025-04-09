@@ -1,6 +1,7 @@
-import { User } from "../models/user.model";
+import { User } from "../models/user.model.js";
 import httpStatus from "http-status";
 import bcrypt, { hash } from "bcrypt";
+import crypto from "crypto";
 
 
 
@@ -27,7 +28,7 @@ const login = async (req, res) => {
         }
 
     } catch (error) {
-        return res.Status(500).json({ message: "Something went wrong" });
+        return res.Status(500).json({ message: `Something went wrong ${error}` });
     }
 }
 
@@ -60,6 +61,8 @@ const register = async (req, res) => {
     res.status(httpStatus.CREATED).json({ message: "User Registered" });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "something went wrong" });
+    return res.status(500).json({ message: `something went wrong ${error}` });
   }
 };
+
+export { login, register };
