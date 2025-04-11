@@ -5,7 +5,14 @@ let connections = {};
 let messages = {};
 
 export const connectToSocket = (server) => {
-  const io = new Server(server);
+  const io = new Server(server, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+      allowedHeaderss: ["*"],
+      credentials: true
+    }
+  });
 
   io.on("connection", (socket) => {
     console.log("User connected: ", socket.id);
