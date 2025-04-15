@@ -1,5 +1,6 @@
 import React from "react";
 import "../App.css";
+import { Link } from "react-router-dom";
 
 export default function LandingPage() {
   return (
@@ -16,28 +17,28 @@ export default function LandingPage() {
             <p>Login</p>
           </div>
         </div>
-          </nav>
-          
+      </nav>
 
+      <div className="landingMainContainer">
+        <div className="landingText">
+          <h1>
+            <span style={{ color: "#FF9839" }}>Connect</span> with your loved
+            ones
+          </h1>
 
+          <p>Cover a distance by BitMeet</p>
 
-          <div className="landingMainContainer">
-              <div>
-                  <h1><span style={{color: "#FF9839"}}>Connect</span> with your loved ones</h1>
-              </div>
-              <div></div>
+          <div role="button">
+            <Link to={"/auth"}>
+              Get Started
+            </Link>
+          </div> 
         </div>
 
-
-
-          
-
-
-
-
-
-
-
+        <div>
+          <img src="/mobile.png" alt="mobile" />
+        </div>
+      </div>
     </div>
   );
 }
