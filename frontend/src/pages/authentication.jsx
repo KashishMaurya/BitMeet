@@ -1,81 +1,114 @@
 import React from "react";
 import {
-  Grid,
-  Paper,
   Avatar,
-  TextField,
   Button,
-  Typography,
-  Box,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  // Link,
+  Paper,
+  TextField,
+  // Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
-export default function Authentication() {
+const Authentication = () => {
+
+  const [username, setUsername] = React.useState();
+  const [password, setPassword] = React.useState();
+  const [name, setName] = React.useState();
+  const [error, setError] = React.useState();
+  const [messages, setMessages] = React.useState();
+
+  const[formState, setFormState] = React.useState(0);
+
+  const [open, setOpen] = React.useState(false);
+
+  const paperStyle = {
+    padding: 20,
+    height: "100vh",
+    width: 500,
+    margin: "20px auto",
+  };
+
+  const avatarStyle = { backgroundColor: "#7b1fa2" };
+  
+  const btnStyle = { margin: "8px 0" };
+
   return (
-    <Grid container component="main" sx={{ height: "100vh" }}>
-      {/* Left side - content / image */}
+    <Grid container style={{ minHeight: "100vh" }}>
       <Grid
+        container
+        style={{ minHeight: "100vh" }}
         item
         xs={false}
-        sm={4}
-        md={6}
+        sm={6}
+        md={7}
         sx={{
-          backgroundImage: "url(https://source.unsplash.com/random)",
-          backgroundRepeat: "no-repeat",
-          backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
+          // backgroundImage:
+          //   "url('https://unsplash.com/photos/black-macbook-watch-smartphone-and-notebook-XVhgrKy8C4g')",
+          // backgroundRepeat: "no-repeat",
+          backgroundColor: "black",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       />
 
-      {/* Right side - sign in form */}
-      <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
-        <Box
-          sx={{
-            my: 8,
-            mx: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        md={5}
+        component={Paper}
+        elevation={6}
+        square
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <div style={paperStyle}>
+          <Grid align="center">
+            <Avatar style={avatarStyle}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <h2>Sign In</h2>
+          </Grid>
+
+          <TextField
+            label="Email Address"
+            placeholder="Enter email"
+            fullWidth
+            required
+            margin="normal"
+          />
+
+          <TextField
+            label="Password"
+            placeholder="Enter password"
+            type="password"
+            fullWidth
+            required
+            margin="normal"
+          />
+
+          <FormControlLabel
+            control={<Checkbox name="checkedB" color="primary" />}
+            label="Remember me"
+          />
+
+          <Button
+            type="button"
+            color="primary"
+            variant="contained"
+            fullWidth
+            style={btnStyle}
+          >
             Sign in
-          </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Email Address"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-          </Box>
-        </Box>
+          </Button>
+        </div>
       </Grid>
     </Grid>
   );
-}
+};
+
+export default Authentication;
