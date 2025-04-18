@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
       if (request.status === HttpStatus.OK) {
         localStorage.setItem("token", request.data.token);
         // setUserData(request.data.user); 
-        // router("/dashboard"); 
+        router("/home"); 
       }
     } catch (error) {
       console.error("Error during login:", error);

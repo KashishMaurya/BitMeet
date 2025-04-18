@@ -29,13 +29,20 @@ const Authentication = () => {
 
   let handleAuth = async () => {
     try {
-      if (formState === 0) {
+      if (formState === 0) { //login
+        let result = await handleLogin(username, password);
+        
       }
-      if (formState === 1) {
+
+      if (formState === 1) { //register
         let result = await handleRegister(name, username, password);
         console.log(result);
+        setUsername("");
         setMessages(result);
         setOpen(true);
+        setError("");
+        setFormState(0); //switch to login form
+        setPassword("");
       }
     } catch (error) {
       let message = error.response.data.message;
@@ -117,6 +124,7 @@ const Authentication = () => {
               // placeholder="Enter Username"
               id="username"
               name="username"
+              value={name}
               fullWidth
               required
               margin="normal"
@@ -132,6 +140,7 @@ const Authentication = () => {
             // placeholder="Enter Username"
             id="username"
             name="username"
+            value={username}
             fullWidth
             required
             margin="normal"
@@ -145,13 +154,14 @@ const Authentication = () => {
             type="password"
             id="password"
             name="password"
+            value={password}
             fullWidth
             required
             margin="normal"
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <p style={{color: "red"}}>{error}</p>
+          <p style={{ color: "red" }}>{error}</p>
 
           <Button
             type="button"
@@ -172,4 +182,3 @@ const Authentication = () => {
 };
 
 export default Authentication;
-
