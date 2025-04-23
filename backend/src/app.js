@@ -23,11 +23,11 @@ const app = express();
 const server = createServer(app);
 
 // Create a Socket.IO server attached to the HTTP server
-const io = connectToSocket(new Server(server));
+const io = connectToSocket(server);
 
 // Set the port for the app (from environment variables or fallback to 8080)
 const PORT = process.env.PORT || 8080;
-app.set("port", PORT);
+app.set("port", PORT);  
 
 // Middleware setup
 app.use(cors()); // Allow cross-origin requests (important for frontend-backend communication)

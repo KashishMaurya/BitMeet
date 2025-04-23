@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import "../styles/VideoComponent.css";
 import { Badge, IconButton, TextField, Button } from "@mui/material";
+// import { connectToSocket } from "../../../backend/src/controllers/SocketManager.js";
 
-const server_url = "httlp://localhost:8080";
+const server_url = "http://localhost:8080";
 
 var connections = {};
 
@@ -126,11 +127,19 @@ export default function VideoMeetComponent() {
     }
   }, [video, audio]);
 
-  let getMedia = () => { 
+  let connectToSocketServer = () => {
+    socketRef.current = io.connect(server_url, { secure: false });
+
+    socketRef.current.on("connect", () => {
+      console.log("Connected to socket:", socketRef.current.id);
+    });
+  };
+
+  let getMedia = () => {
     setVideo(videoAvailable);
     setAudio(audioAvailable);
 
-    // connectToSocketServer();
+    connectToSocketServer();
   };
 
   let connect = () => {
