@@ -2,9 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import "../styles/VideoComponent.css";
 import { Badge, IconButton, TextField, Button } from "@mui/material";
-// import { connectToSocket } from "../../../backend/src/controllers/SocketManager.js";
+// import VideocamIcon from "@mui/icons-material/Videocam";
+// import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+// import styles from "../styles/videoComponent.module.css";
+// import CallEndIcon from "@mui/icons-material/CallEnd";
+// import MicIcon from "@mui/icons-material/Mic";
+// import MicOffIcon from "@mui/icons-material/MicOff";
+// import ScreenShareIcon from "@mui/icons-material/ScreenShare";
+// import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
+// import ChatIcon from "@mui/icons-material/Chat";
+// import server from "../environment";
 
-const server_url = "http://localhost:8080";
+const server_url = "http://localhost:8080"; //? or 3000
 
 var connections = {};
 
@@ -22,7 +31,7 @@ export default function VideoMeetComponent() {
 
   let [audioAvailable, setAudioAvailable] = useState(true);
 
-  let [video, setVideo] = useState();
+  let [video, setVideo] = useState([]);
 
   let [audio, setAudio] = useState();
 
@@ -59,8 +68,10 @@ export default function VideoMeetComponent() {
 
       if (videoPermission) {
         setVideoAvailable(true);
+        console.log("Video permission granted");
       } else {
         setVideoAvailable(false);
+        console.log("Video permission denied");
       }
 
       //audio
@@ -70,8 +81,10 @@ export default function VideoMeetComponent() {
 
       if (audioPermission) {
         setAudioAvailable(true);
+        console.log("Audio permission granted");
       } else {
         setAudioAvailable(false);
+        console.log("Audio permission denied");
       }
 
       //screen sharing
@@ -101,6 +114,14 @@ export default function VideoMeetComponent() {
   };
 
   useEffect(() => {
+    // if (video !== undefined && audio !== undefined) {
+    //             getUserMedia();
+    //             console.log("SET STATE HAS ", video, audio);
+    //  }, [video, audio])
+    //     let getMedia = () => {
+    //         setVideo(videoAvailable);
+    //         setAudio(audioAvailable);
+    //         connectToSocketServer();
     getPermissions();
   }, []);
 
@@ -127,19 +148,132 @@ export default function VideoMeetComponent() {
     }
   }, [video, audio]);
 
+  let gotMessageFromServer = (fromId, message) => {
+    //todo
+  };
+
+  let addMessage = () => {
+    //todo
+  };
+
   let connectToSocketServer = () => {
-    socketRef.current = io.connect(server_url, { secure: false });
+    // socketRef.current = io.connect(server_url, { secure: false });
+    socketRef.current = io(server_url, {
+      transports: ["websocket"],
+    });
+
+    socketRef.current.on("signal", gotMessageFromServer);
 
     socketRef.current.on("connect", () => {
       console.log("Connected to socket:", socketRef.current.id);
+
+      socketRef.current.emit("join-call", window.location.href);
+
+      socketIdRef.current = socketRef.current.id;
+
+      socketRef.current.on("chat-message", addMessage);
+
+      socketRef.current.on("user-left", (id) => {
+        setVideos((videos) => videos.filter((video) => video.socketId !== id));
+      });
+
+      socketRef.current.on("user-joined", (id, clients) => {
+        clients.forEach((socketListId) => {
+          // creates a new video element for each user in the call
+          connections[socketListId] = new RTCPeerConnection(
+            peerConfigConnections
+          );
+
+          connections[socketListId].onicecandidate = (event) => {
+            if (event.candidate != null) {
+              socketRef.current.emit(
+                "signal",
+                socketListId,
+                JSON.stringify({ ice: event.candidate })
+              );
+            }
+          };
+
+          connections[socketListId].onaddstream = (event) => {
+            //major issues (interview question!!)
+
+            let videoExist = videoRef.current.find(
+              (video) => video.socketId === socketListId
+            );
+
+            if (videoExist) {
+              setVideo((videos) => {
+                const updatedVideos = videos.map((video) =>
+                  video.socketId === socketListId
+                    ? { ...video, stream: event.stream }
+                    : video
+                );
+                videoRef.current = updatedVideos;
+                return updatedVideos;
+              });
+            } else {
+              let newVideo = {
+                socketId: socketListId,
+                stream: event.stream,
+                autoPlay: true,
+                playsinline: true,
+              };
+
+              setVideos((videos) => {
+                const updatedVideos = [...videos, newVideo];
+                videoRef.current = updatedVideos;
+                return updatedVideos;
+              });
+            }
+          };
+
+          if (window.localStream === undefined && window.localStream !== null) {
+            connections[socketListId].addStream(window.localStream);
+          } else {
+            //blacksilence
+            // let blacksilence
+          }
+        });
+
+        if (id === socketIdRef.current) {
+          for (let id2 in connections) {
+            if (id2 === socketIdRef.current) continue;
+
+            try {
+              connections[id2].addStream(window.localStream);
+            } catch (error) {
+              console.log("Error adding stream:", error);
+            }
+
+            connections[id2].createOffer().then((description) => {
+              connections[id2]
+                .setLocalDescription(description)
+                .then(() => {
+                  socketIdRef.current.emit(
+                    "signal",
+                    id2,
+                    JSON.stringify({
+                      sdp: connections[id2].setLocalDescription,
+                    })
+                  );
+                })
+                .catch((error) => console.log(error));
+            });
+          }
+        }
+      });
+    });
+
+    socketRef.current.on("connect_error", (err) => {
+      console.error("Connection failed:", err.message);
     });
   };
 
   let getMedia = () => {
+    connectToSocketServer();
+
     setVideo(videoAvailable);
     setAudio(audioAvailable);
-
-    connectToSocketServer();
   };
 
   let connect = () => {
