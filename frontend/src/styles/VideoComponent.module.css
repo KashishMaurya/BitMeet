@@ -26,7 +26,6 @@
 
 .conferenceView {
   display: flex;
-
   padding: 10px;
   gap: 10px;
 }
@@ -55,5 +54,6 @@
 
 .chattingArea {
   position: absolute;
-  bottom: 0;
+  bottom: 20px;
+  /* gap: 10px; */
 }

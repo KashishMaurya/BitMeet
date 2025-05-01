@@ -131,6 +131,7 @@ export default function VideoMeetComponent() {
       console.log("SET STATE HAS ", video, audio);
     }
   }, [video, audio]);
+
   let getMedia = () => {
     setVideo(videoAvailable);
     setAudio(audioAvailable);
@@ -221,7 +222,7 @@ export default function VideoMeetComponent() {
   };
 
   let getDislayMediaSuccess = (stream) => {
-    console.log("HERE");
+    // console.log("HERE");
     try {
       window.localStream.getTracks().forEach((track) => track.stop());
     } catch (e) {
@@ -427,6 +428,7 @@ export default function VideoMeetComponent() {
     ctx.resume();
     return Object.assign(dst.stream.getAudioTracks()[0], { enabled: false });
   };
+
   let black = ({ width = 640, height = 480 } = {}) => {
     let canvas = Object.assign(document.createElement("canvas"), {
       width,
@@ -441,6 +443,7 @@ export default function VideoMeetComponent() {
     setVideo(!video);
     // getUserMedia();
   };
+
   let handleAudio = () => {
     setAudio(!audio);
     // getUserMedia();
@@ -451,6 +454,7 @@ export default function VideoMeetComponent() {
       getDislayMedia();
     }
   }, [screen]);
+
   let handleScreen = () => {
     setScreen(!screen);
   };
@@ -467,9 +471,11 @@ export default function VideoMeetComponent() {
     setModal(true);
     setNewMessages(0);
   };
+
   let closeChat = () => {
     setModal(false);
   };
+
   let handleMessage = (e) => {
     setMessage(e.target.value);
   };
@@ -529,7 +535,7 @@ export default function VideoMeetComponent() {
                     messages.map((item, index) => {
                       console.log(messages);
                       return (
-                        <div style={{ marginBottom: "20px" }} key={index}>
+                        <div style={{ marginBottom: "15px" }} key={index}>
                           <p style={{ fontWeight: "bold" }}>{item.sender}</p>
                           <p>{item.data}</p>
                         </div>
@@ -545,7 +551,7 @@ export default function VideoMeetComponent() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     id="outlined-basic"
-                    label="Enter Your chat"
+                    label="Enter Your message"
                     variant="outlined"
                   />
                   <Button variant="contained" onClick={sendMessage}>
