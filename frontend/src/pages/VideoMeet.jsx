@@ -464,7 +464,7 @@ export default function VideoMeetComponent() {
       let tracks = localVideoref.current.srcObject.getTracks();
       tracks.forEach((track) => track.stop());
     } catch (e) {}
-    window.location.href = "/";
+    window.location.href = "/home";
   };
 
   let openChat = () => {
@@ -507,18 +507,23 @@ export default function VideoMeetComponent() {
     <div>
       {askForUsername === true ? (
         <div>
-          <h2>Enter into Lobby </h2>
+          <br /> <h2 style={{ marginLeft: "1rem" }}>Enter into Lobby </h2>{" "}
+          <br />
           <TextField
             id="outlined-basic"
             label="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             variant="outlined"
+            style={{ marginLeft: "1rem" }}
           />
-          <Button variant="contained" onClick={connect}>
+          <Button
+            variant="contained"
+            onClick={connect}
+            style={{ marginLeft: "1rem", marginTop: "0.5rem"}}
+          >
             Connect
           </Button>
-
           <div>
             <video ref={localVideoref} autoPlay muted></video>
           </div>
@@ -618,8 +623,7 @@ export default function VideoMeetComponent() {
                 ></video>
               </div>
             ))}
-            </div>
-            
+          </div>
         </div>
       )}
     </div>
