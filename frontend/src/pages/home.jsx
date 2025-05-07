@@ -27,7 +27,11 @@ function HomeComponent() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center" }}>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              navigate("/history");
+            }}
+          >
             <RestoreIcon />
             <p>History</p>
           </IconButton>
