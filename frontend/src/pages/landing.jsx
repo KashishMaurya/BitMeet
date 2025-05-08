@@ -9,7 +9,9 @@ export default function LandingPage() {
     <div className="landingPageContainer">
       <nav>
         <div className="navHeader">
-          <h2>BitMeet</h2>
+          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+            <h2>BitMeet</h2>
+          </Link>
         </div>
 
         <div className="navlist">

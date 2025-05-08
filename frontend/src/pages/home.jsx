@@ -1,11 +1,10 @@
 import React, { useContext, useState } from "react";
 import withAuth from "../utils/withAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../App.css";
 import { Button, IconButton, TextField } from "@mui/material";
 import RestoreIcon from "@mui/icons-material/Restore";
 import { AuthContext } from "../contexts/AuthContext";
-import { addToUserHistory } from "../contexts/AuthContext.jsx";
 
 function HomeComponent() {
   let navigate = useNavigate();
@@ -22,9 +21,17 @@ function HomeComponent() {
   return (
     <>
       <div className="navBar">
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <Link
+          to="/"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            textDecoration: "none",
+            color: "inherit",
+          }}
+        >
           <h1>BitMeet</h1>
-        </div>
+        </Link>
 
         <div style={{ display: "flex", alignItems: "center" }}>
           <IconButton
@@ -51,7 +58,7 @@ function HomeComponent() {
         <div className="leftPanel">
           <div>
             <h2>Video calls and meetings for everyone</h2>
-            {/* <br /> */}
+            
             <p>Connect, collaborate and celebrate from anywhere with BitMeet</p>
             <br />
 

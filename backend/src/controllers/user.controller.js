@@ -69,12 +69,17 @@ const getUserHistory = async (req, res) => {
 
   try {
     const user = await User.findOne({ token: token });
-    const meetings = await Meeting.findOne({ user_id: user.username });
-    res.json(meetings);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const meetings = await Meeting.find({ user_id: user.username }); 
+    res.status(200).json({ history: meetings }); // send as array in `history` key
   } catch (e) {
-    res.json({ message: `Something went wrong ${e}` });
+    res.status(500).json({ message: `Something went wrong ${e}` });
   }
 };
+
 
 const addToHistory = async (req, res) => {
   const { token, meeting_code } = req.body;

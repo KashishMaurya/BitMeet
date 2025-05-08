@@ -11,10 +11,9 @@ import MicOffIcon from "@mui/icons-material/MicOff";
 import ScreenShareIcon from "@mui/icons-material/ScreenShare";
 import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
 import ChatIcon from "@mui/icons-material/Chat";
-// import server from "../environment";
+// import REACT_APP_SERVER_URL from "../env";
 
-// const server_url = server;
-const server_url = "http://localhost:8080";
+const server_url = process.env.REACT_APP_SERVER_URL || "http://localhost:8080";
 
 var connections = {};
 
@@ -56,15 +55,10 @@ export default function VideoMeetComponent() {
 
   let [videos, setVideos] = useState([]);
 
-  // TODO
-  // if(isChrome() === false) {
-
-  // }
 
   useEffect(() => {
-    console.log("HELLO");
     getPermissions();
-  });
+  }, []);
 
   let getDislayMedia = () => {
     if (screen) {
@@ -222,7 +216,6 @@ export default function VideoMeetComponent() {
   };
 
   let getDislayMediaSuccess = (stream) => {
-    // console.log("HERE");
     try {
       window.localStream.getTracks().forEach((track) => track.stop());
     } catch (e) {
@@ -439,10 +432,14 @@ export default function VideoMeetComponent() {
     return Object.assign(stream.getVideoTracks()[0], { enabled: false });
   };
 
+
   let handleVideo = () => {
-    setVideo(!video);
-    // getUserMedia();
-  };
+  setVideo((prev) => {
+    const newValue = !prev;
+    setTimeout(() => getUserMedia(), 0); // defer call
+    return newValue;
+  });
+};
 
   let handleAudio = () => {
     setAudio(!audio);
@@ -495,7 +492,6 @@ export default function VideoMeetComponent() {
     socketRef.current.emit("chat-message", message, username);
     setMessage("");
 
-    // this.setState({ message: "", sender: username })
   };
 
   let connect = () => {

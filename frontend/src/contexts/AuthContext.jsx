@@ -53,18 +53,27 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getHistoryOfUser = async () => {
-        try {
-            let request = await client.get("/get_all_activity", {
-                params: {
-                    token: localStorage.getItem("token")
-                }
-            });
-            return request.data
-        } catch
-         (err) {
-            throw err;
-        }
+    console.log("Fetching user History...");
+
+    if (!localStorage.getItem("token")) {
+      console.error("No token found in local storage.");
+      return []; // or handle as needed
     }
+    try {
+      const request = await client.get("/get_all_activity", {
+        params: {
+          token: localStorage.getItem("token"),
+        },
+      });
+
+      
+      return request.data.history || []; // fallback to empty array
+    } catch (err) {
+      console.error("Error fetching history:", err);
+      throw err;
+    }
+  };
+
 
   const addToUserHistory = async (meetingCode) => {
     try {
